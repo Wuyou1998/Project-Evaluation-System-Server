@@ -19,6 +19,12 @@ class RspModel {
     static USER_UPDATE_SUCCESS = 3007
     static USER_UPDATE_FAIL = 3008
 
+    static PROJECT_CREATE_SUCCESS = 4001
+    static PROJECT_CREATE_FAIL = 4002
+    static PROJECT_HAS_EXIST = 4003
+    static PROJECT_UPDATE_SUCCESS = 4004
+    static PROJECT_UPDATE_FAIL = 4005
+
     constructor(code, result) {
         if (code) {
             this.code = code
@@ -28,7 +34,7 @@ class RspModel {
             this.result = result
     }
 
-    
+
     dispatchCodeToMessage = function (code) {
         switch (code) {
             case 1000:
@@ -63,6 +69,22 @@ class RspModel {
                 break
             case 3008:
                 this.message = '资料修改失败！'
+                break
+
+            case 4001:
+                this.message = '项目新建成功！'
+                break
+            case 4002:
+                this.message = '项目新建失败！'
+                break
+            case 4003:
+                this.message = '项目已存在！'
+                break
+            case 4004:
+                this.message = '项目更新成功！'
+                break
+            case 4005:
+                this.message = '项目更新失败！'
                 break
         }
     }
