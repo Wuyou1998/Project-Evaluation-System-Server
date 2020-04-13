@@ -3,7 +3,7 @@ const loginCheck = require('../middleware/loginCherk')
 const { RspModel } = require('../model/resModel')
 const { ProjectUpdateModel, ProjectCardModel } = require('../model/projectModel')
 const { getProjectDetail, createNewProject, updateProject,
-    checkProjectName, deleteProject,search } = require('../controller/projectController')
+    checkProjectName, deleteProject, search, approvalProject } = require('../controller/projectController')
 
 
 
@@ -47,8 +47,8 @@ router.post('/create', loginCheck, async function (ctx, next) {
 
 //更新project
 router.post('/update', loginCheck, async function (ctx, next) {
-    const { projectName, content, administraor, image, fileUrl, level } = ctx.request.body
-    const updateModel = new ProjectUpdateModel(projectName, content, administraor, image, fileUrl, level)
+    const { id,projectName, content,  image, fileUrl, level } = ctx.request.body
+    const updateModel = new ProjectUpdateModel(id,projectName, content, image, fileUrl, level)
     const result = await updateProject(updateModel)
     if (result)
         ctx.body = new RspModel(RspModel.PROJECT_UPDATE_SUCCESS, null)
@@ -72,8 +72,20 @@ router.post('/delete', loginCheck, async function (ctx, next) {
 router.get('/search', async function (ctx, next) {
     const projectName = ctx.query.projectName
     const result = await search(projectName)
-    return result
+    ctx.body = result
 })
+
+//审批project
+router.post('/approval', async function (ctx, next) {
+    const { projectName, state } = ctx.request.body
+    const result = await approvalProject(projectName, state)
+    if (result)
+        ctx.body = new RspModel(RspModel.OPERATION_SUCCESS, null)
+    else
+        ctx.body = new RspModel(RspModel.OPERATION_FAIL, null)
+})
+
+
 
 
 module.exports = router

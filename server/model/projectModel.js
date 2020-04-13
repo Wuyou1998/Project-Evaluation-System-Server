@@ -1,10 +1,10 @@
 
-class ProjectCardModel{
-    constructor(projectName,content,author,administraor,image,fileUrl,level,state){
+class ProjectCardModel {
+    constructor(projectName, content, author, administraor, image, fileUrl, level, state) {
         this.projectName = projectName
         this.content = content
         this.author = author
-        this.administraor =administraor
+        this.administraor = administraor
 
         if (typeof image == "undefined" || image == null || image == "") {
             this.image = null
@@ -33,11 +33,11 @@ class ProjectCardModel{
     }
 }
 
-class ProjectUpdateModel{
-    constructor(projectName,content,administraor,image,fileUrl,level){
+class ProjectUpdateModel {
+    constructor(id, projectName, content, image, fileUrl, level) {
+        this.id = id
         this.projectName = projectName
         this.content = content
-        this.administraor =administraor
 
         if (typeof image == "undefined" || image == null || image == "") {
             this.image = null
