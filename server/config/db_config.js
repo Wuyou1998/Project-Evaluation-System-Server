@@ -10,7 +10,7 @@ if (env === 'production') {
         user: 'root',
         password: '123456',
         port: '3306',
-        database: 'my_blog'
+        database: 'reviewer_system'
     }
     REDIS_CONFIG = {
         host: '127.0.0.1',
@@ -22,7 +22,7 @@ if (env === 'production') {
         user: 'root',
         password: '123456',
         port: '3306',
-        database: 'my_blog'
+        database: 'reviewer_system'
     }
     REDIS_CONFIG = {
         host: '127.0.0.1',

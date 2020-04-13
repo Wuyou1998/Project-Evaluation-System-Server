@@ -1,5 +1,5 @@
 const router = require('koa-router')()
-const { SuccessModel, ErrorModel } = require('../model/resModel')
+const { RspModel } = require('../model/resModel')
 
 
 router.prefix('/api/page')
