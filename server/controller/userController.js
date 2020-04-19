@@ -24,14 +24,14 @@ const login = async (userName, password) => {
 }
 
 const updateUserInfo = async (updateModel) => {
-    let sql = `update users set state='${updateModel.state},avatar='${updateModel.avatar},
-    realName='${updateModel.realName},contract='${updateModel.realName}' where userName='${updateModel.userName}'`
+    let sql = `update users set state='${updateModel.state}',avatar='${updateModel.avatar}',
+    realName='${updateModel.realName}',contact='${updateModel.realName}' where userName='${updateModel.userName}'`
     const result = await exec(sql)
     return result.affectedRows > 0 ? true : false
 }
 
 const getUserDetail = async (userName) => {
-    let sql = `select userName, state, avatar,realName, contact from users where userName='${userName}'`
+    let sql = `select userName, state, avatar,type,realName, contact from users where userName='${userName}'`
     const rows = await exec(sql)
     const row = rows[0] || {}
     return row

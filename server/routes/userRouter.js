@@ -21,7 +21,7 @@ router.post('/register', async function (ctx, next) {
         realName, contact, createAtTime, pushId)
     const result = await register(userModel)
     if (result)
-        ctx.body = new RspModel(RspModel.USER_REGISTER_SUCCESS, null)
+        ctx.body = new RspModel(RspModel.OPERATION_SUCCESS, null)
     else
         ctx.body = new RspModel(RspModel.USER_REGISTER_FAIL, null)
 
@@ -33,10 +33,11 @@ router.post('/login', async function (ctx, next) {
     const result = await login(userName, password)
     if (result.userName) {
         ctx.session.userName = result.userName
-        //TODO 登录成功是否返回用户数据？
-        ctx.body = new RspModel(RspModel.USER_LOGIN_SUCCESS, null)
+        //登录成功是否返回用户数据
+        const detail = await getUserDetail(result.userName)
+        ctx.body = new RspModel(RspModel.OPERATION_SUCCESS, detail)
     } else {
-        ctx.body = new RspModel(RspModel.USER_NOT_REGISTER, null)
+        ctx.body = new RspModel(RspModel.USER_PASSWORD_NOT_CORRECT, null)
     }
 })
 
@@ -46,8 +47,9 @@ router.post('/update', loginCheck, async function (ctx, next) {
     const updateModel = new UserCardModel(ctx.session.userName, state, avatar, realName, contact)
     const result = await updateUserInfo(updateModel)
     if (result) {
-        //TODO 更新成功是否返回用户数据？
-        ctx.body = new RspModel(RspModel.USER_UPDATE_SUCCESS, null)
+        // 更新成功是否返回用户数据
+        const detail = await getUserDetail(ctx.session.userName)
+        ctx.body = new RspModel(RspModel.OPERATION_SUCCESS, detail)
     } else {
         ctx.body = new RspModel(RspModel.USER_UPDATE_FAIL, null)
     }

@@ -39,7 +39,7 @@ router.post('/create', loginCheck, async function (ctx, next) {
     const model = new ProjectCardModel(projectName, content, author, administraor, image, fileUrl, level, state);
     const insertId = await createNewProject(model)
     if (insertId)
-        ctx.body = new RspModel(RspModel.PROJECT_CREATE_SUCCESS, null)
+        ctx.body = new RspModel(RspModel.OPERATION_SUCCESS, null)
     else
         ctx.body = new RspModel(RspModel.PROJECT_CREATE_FAIL, null)
 
@@ -51,7 +51,7 @@ router.post('/update', loginCheck, async function (ctx, next) {
     const updateModel = new ProjectUpdateModel(id,projectName, content, image, fileUrl, level)
     const result = await updateProject(updateModel)
     if (result)
-        ctx.body = new RspModel(RspModel.PROJECT_UPDATE_SUCCESS, null)
+        ctx.body = new RspModel(RspModel.OPERATION_SUCCESS, null)
     else
         ctx.body = new RspModel(RspModel.PROJECT_UPDATE_FAIL, null)
 
