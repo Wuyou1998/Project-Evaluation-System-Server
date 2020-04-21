@@ -2,20 +2,28 @@ const { exec } = require('../db/mysql')
 
 const getProjectDetail = async (projectName) => {
     let sql = `select * from projects where projectName='${projectName}'`
-    const rows = await exec(sql)
-    return rows[0] || {}
+    let rows = await exec(sql)
+    rows = JSON.parse(JSON.stringify(rows))
+    let row = rows[0] || {}
+    if (row.id) {
+        const avatars = await exec(`select avatar,state from users where userName='${row.author}'`)
+        if (avatars[0]) {
+            row.avatar = avatars[0].avatar
+            row.userState = avatars[0].state
+        }
+    }
+    return row
 }
 
 
 const createNewProject = async (projectCardModel) => {
-    let sql = `insert into projects(projectName, content, author, administraor, image, fileUrl, level, state) values(
+    let sql = `insert into projects(projectName, content, author,image, fileUrl, level, state,reason) values(
         '${projectCardModel.projectName}','${projectCardModel.content}','${projectCardModel.author}',
-        '${projectCardModel.administraor}','${projectCardModel.image}','${projectCardModel.fileUrl}',
-        '${projectCardModel.level}','${projectCardModel.state}')`
+        '${projectCardModel.image}','${projectCardModel.fileUrl}',
+        '${projectCardModel.level}','${projectCardModel.state}','${projectCardModel.reason}')`
 
     const result = await exec(sql)
     if (result.insertId) {
-        await createRecordForAdmin(projectCardModel.projectName, projectCardModel.administraor)
         return true
     }
     return false
@@ -24,7 +32,7 @@ const createNewProject = async (projectCardModel) => {
 const updateProject = async (updateModel) => {
     let sql = `update projects set projectName='${updateModel.projectName}',content='${updateModel.content}',
     image='${updateModel.image}',fileUrl='${updateModel.fileUrl}',
-    level='${updateModel.level}',state='${updateModel.state}' where id='${updateModel.id}'`
+    level='${updateModel.level}',state='${updateModel.state}',reason='${updateModel.reason}' where id='${updateModel.id}'`
     const result = await exec(sql)
     return result.affectedRows > 0 ? true : false
 }
@@ -50,8 +58,14 @@ const createRecordForAdmin = async (projectName, adminName) => {
     return result.insertId
 }
 
-const search = async (projectName) => {
-    let sql = `select * from projects where projectnName='${projectName}'`
+const searchByProjectName = async (projectName) => {
+    let sql = `select * from projects where projectName='${projectName}'`
+    const rows = await exec(sql)
+    return rows
+}
+
+const searchByUserName = async (userName) => {
+    let sql = `select * from projects where author='${userName}'`
     const rows = await exec(sql)
     return rows
 }
@@ -64,14 +78,17 @@ const checkProjectName = async (projectName) => {
     return row.projectName ? true : false
 }
 
-const approvalProject = async (projectName, state) => {
+const approvalProject = async (projectName, state, reason, userName) => {
     const check = await checkProjectName(projectName)
     if (!check)
         return false
-    let sql = `update projects set state='${state}' where projectName='${projectName}'`
+    if (reason == null || reason == 'undefined')
+        reason == ''
+    let sql = `update projects set state='${state}',reason ='${reason}',administraor='${userName}' where projectName='${projectName}'`
     const result = await exec(sql)
     return result.affectedRows > 0 ? true : false
 }
+
 
 
 
@@ -81,6 +98,7 @@ module.exports = {
     updateProject,
     checkProjectName,
     deleteProject,
-    search,
+    searchByUserName,
+    searchByProjectName,
     approvalProject
 }

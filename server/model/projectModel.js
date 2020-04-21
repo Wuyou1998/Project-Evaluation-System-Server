@@ -1,11 +1,10 @@
 
+//这个card写炸了，目前仅供创建使用、、、、、
 class ProjectCardModel {
-    constructor(projectName, content, author, administraor, image, fileUrl, level, state) {
+    constructor(projectName, content, author, image, fileUrl, level) {
         this.projectName = projectName
         this.content = content
         this.author = author
-        this.administraor = administraor
-
         if (typeof image == "undefined" || image == null || image == "") {
             this.image = null
         } else {
@@ -25,16 +24,16 @@ class ProjectCardModel {
         }
 
 
-        if (typeof state == "undefined" || state == null || state == "") {
-            this.state = 0
-        } else {
-            this.state = state
-        }
+
+        this.state = 0
+
+        this.reason = null
+
     }
 }
 
 class ProjectUpdateModel {
-    constructor(id, projectName, content, image, fileUrl, level) {
+    constructor(id, projectName, content, image, fileUrl, level, state, reason) {
         this.id = id
         this.projectName = projectName
         this.content = content
@@ -57,7 +56,13 @@ class ProjectUpdateModel {
             this.level = level
         }
 
-        this.state = 0
+        if (typeof reason == "undefined" || reason == null || reason == "") {
+            this.reason = 0
+        } else {
+            this.reason = reason
+        }
+
+        this.state = state
 
     }
 }
