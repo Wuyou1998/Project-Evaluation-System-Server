@@ -2,7 +2,8 @@ const router = require('koa-router')()
 const loginCheck = require('../middleware/loginCherk')
 const { RspModel } = require('../model/resModel')
 const { checkRegister, register, login, updateUserInfo,
-    getUserDetail, searchUser } = require('../controller/userController')
+    getUserDetail, searchUser, resetUserPassword } = require('../controller/userController')
+const { bindPushId } = require('../controller/diviceController')
 const { UserRegisterModel, UserCardModel } = require('../model/userModel')
 
 router.prefix('/api/user')
@@ -29,10 +30,12 @@ router.post('/register', async function (ctx, next) {
 
 //登录
 router.post('/login', async function (ctx, next) {
-    const { userName, password } = ctx.request.body
-    const result = await login(userName, password)
+    const { userName, password, pushId } = ctx.request.body
+    const result = await login(userName, password, pushId)
     if (result.userName) {
         ctx.session.userName = result.userName
+        if (pushId)
+            bindPushId(result.userName, pushId)
         //登录成功是否返回用户数据
         const detail = await getUserDetail(result.userName)
         ctx.body = new RspModel(RspModel.OPERATION_SUCCESS, detail)
@@ -50,6 +53,16 @@ router.post('/update', loginCheck, async function (ctx, next) {
         // 更新成功是否返回用户数据
         const detail = await getUserDetail(ctx.session.userName)
         ctx.body = new RspModel(RspModel.OPERATION_SUCCESS, detail)
+    } else {
+        ctx.body = new RspModel(RspModel.USER_UPDATE_FAIL, null)
+    }
+})
+
+router.post('/reset', loginCheck, async function (ctx, next) {
+    const { userName, password } = ctx.request.body
+    const result = await resetUserPassword(userName, password)
+    if (result) {
+        ctx.body = new RspModel(RspModel.OPERATION_SUCCESS, null)
     } else {
         ctx.body = new RspModel(RspModel.USER_UPDATE_FAIL, null)
     }

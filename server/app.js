@@ -13,6 +13,7 @@ const deviceRouter = require('./routes/deviceRouter')
 const projectRouter = require('./routes/projectRouter')
 const userRouter = require('./routes/userRouter')
 const pageRouter = require('./routes/pageRouter')
+const recordRouter = require('./routes/recordRouter')
 
 // error handler
 onerror(app)
@@ -57,6 +58,7 @@ app.use(deviceRouter.routes(), deviceRouter.allowedMethods())
 app.use(projectRouter.routes(), projectRouter.allowedMethods())
 app.use(userRouter.routes(), userRouter.allowedMethods())
 app.use(pageRouter.routes(), pageRouter.allowedMethods())
+app.use(recordRouter.routes(), recordRouter.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

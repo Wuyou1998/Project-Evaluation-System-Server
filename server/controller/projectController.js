@@ -1,5 +1,5 @@
 const { exec } = require('../db/mysql')
-
+const { pushMessageToSingle } = require('../controller/pushController')
 const getProjectDetail = async (projectName) => {
     let sql = `select * from projects where projectName='${projectName}'`
     let rows = await exec(sql)
@@ -24,6 +24,17 @@ const createNewProject = async (projectCardModel) => {
 
     const result = await exec(sql)
     if (result.insertId) {
+        let selectAdminSql = `select * from users where type='1'`
+        let admins = await exec(selectAdminSql)
+        admins = JSON.parse(JSON.stringify(admins))
+        for (i = 0; i < admins.length || 0; i++) {
+            const admin = admins[i]
+            if (typeof admin.pushId == "undefined" || admin.pushId == null || admin.pushId == "" || admin.pushId == "null") {
+
+            } else {
+                pushMessageToSingle(admin.pushId, projectCardModel.author + '发起了科研项目审批，请及时评审')
+            }
+        }
         return true
     }
     return false
@@ -59,7 +70,7 @@ const createRecordForAdmin = async (projectName, adminName) => {
 }
 
 const searchByProjectName = async (projectName) => {
-    let sql = `select * from projects where projectName='${projectName}'`
+    let sql = `select * from projects where projectName like '%${projectName}%'`
     const rows = await exec(sql)
     return rows
 }
@@ -86,7 +97,19 @@ const approvalProject = async (projectName, state, reason, userName) => {
         reason == ''
     let sql = `update projects set state='${state}',reason ='${reason}',administraor='${userName}' where projectName='${projectName}'`
     const result = await exec(sql)
-    return result.affectedRows > 0 ? true : false
+    if (result.affectedRows > 0) {
+        let getUserSql = `select * FROM users where userName=(select author from reviewer_system.projects where projectName = '${projectName}')`
+        const rows = await exec(getUserSql)
+        const user = rows[0] || {}
+        if (typeof user.pushId == "undefined" || user.pushId == null || user.pushId == "" || user.pushId == "null") {
+
+        } else {
+            pushMessageToSingle(user.pushId, '管理员' + userName + '已评审了你的项目申请')
+        }
+
+        return true
+    }
+    return false
 }
 
 

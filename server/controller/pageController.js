@@ -1,9 +1,9 @@
 const { exec } = require('../db/mysql')
 
 const getMainPagData = async () => {
-    const sql1 = `select * from projects where state=0`
-    const sql2 = `select * from projects where state=1`
-    const sql3 = `select * from projects where state=2`
+    const sql1 = `select * from projects where state=0 order by id desc`
+    const sql2 = `select * from projects where state=1 order by id desc`
+    const sql3 = `select * from projects where state=2 order by id desc`
 
     let rows1 = await exec(sql1)
     let rows2 = await exec(sql2)

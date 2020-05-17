@@ -20,6 +20,8 @@ const getPushId = async (userName) => {
 
 const setPushId = async (userName, pushId) => {
     
+    let unBindSql = `update users set pushId='null' where pushId='${pushId}'`
+    await exec(unBindSql)
     let sql = `update users set pushId='${pushId}' where userName='${userName}'`
     const result = await exec(sql)
     return result.affectedRows || 0

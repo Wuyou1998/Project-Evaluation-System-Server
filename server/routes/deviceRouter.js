@@ -19,7 +19,10 @@ router.post('/bind', loginCheck, async function (ctx, next) {
 
     const { pushId } = ctx.request.body
     const result = await bindPushId(ctx.session.userName, pushId)
-    ctx.body = new RspModel(RspModel.OPERATION_SUCCESS, result)
+    if (result)
+        ctx.body = new RspModel(RspModel.OPERATION_SUCCESS, null)
+    else
+        ctx.body = new RspModel(RspModel.OPERATION_FAIL, null)
 })
 
 

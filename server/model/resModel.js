@@ -8,21 +8,19 @@ class RspModel {
     static OPERATION_SUCCESS = 1000
     static OPERATION_FAIL = 1001
 
-    static BIND_PUSHID_SUCCESS = 2001
 
     static USER_NOT_LOGIN = 3001
     static USERNAME_HAS_BE_REGISTERED = 3002
-    static USER_REGISTER_SUCCESS = 3003
     static USER_REGISTER_FAIL = 3004
     static USER_NOT_REGISTER = 3005
     static USER_UPDATE_FAIL = 3008
     static USER_PASSWORD_NOT_CORRECT = 3009
 
-    static PROJECT_CREATE_SUCCESS = 4001
     static PROJECT_CREATE_FAIL = 4002
     static PROJECT_HAS_EXIST = 4003
-    static PROJECT_UPDATE_SUCCESS = 4004
     static PROJECT_UPDATE_FAIL = 4005
+
+    static COMMENT_ADD_FAIL = 5001
 
     constructor(code, result) {
         if (code) {
@@ -68,6 +66,9 @@ class RspModel {
                 break
             case 4005:
                 this.message = '项目更新失败！'
+                break
+            case 5001:
+                this.message = '添加评论失败！'
                 break
         }
     }

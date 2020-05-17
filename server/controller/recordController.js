@@ -16,6 +16,20 @@ const getCommentByProjectName = async (projectName) => {
     return rows
 }
 
+const addComment = async (userName, projectName, content) => {
+    let sql = `insert records(person,projectName,comment) values('${userName}','${projectName}','${content}')`
+    const addData = await exec(sql)
+    return addData.insertId
+}
+
+const getUserComment = async (userName) => {
+    let sql = `select projectName,comment from records where person='${userName}'`
+    const result = await exec(sql)
+    return result || {}
+}
+
 module.exports = {
-    getCommentByProjectName
+    getCommentByProjectName,
+    addComment,
+    getUserComment
 }

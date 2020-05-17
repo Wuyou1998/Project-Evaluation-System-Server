@@ -44,11 +44,18 @@ const searchUser = async (keyWord) => {
     return rows
 }
 
+const resetUserPassword = async (userName, password) => {
+    let sql = `update users set password='${password}' where userName='${userName}'`
+    const result = await exec(sql)
+    return result.affectedRows > 0 ? true : false
+}
+
 module.exports = {
     checkRegister,
     register,
     login,
     updateUserInfo,
     getUserDetail,
-    searchUser
+    searchUser,
+    resetUserPassword
 }
