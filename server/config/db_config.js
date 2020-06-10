@@ -7,7 +7,7 @@ let REDIS_CONFIG
 if (env === 'production') {
     MYSQL_CONFIG = {
         host: 'localhost',
-        user: 'root',
+        user: 'wuyou',
         password: '123456',
         port: '3306',
         database: 'reviewer_system'
@@ -19,7 +19,7 @@ if (env === 'production') {
 } else {
     MYSQL_CONFIG = {
         host: 'localhost',
-        user: 'root',
+        user: 'wuyou',
         password: '123456',
         port: '3306',
         database: 'reviewer_system'
